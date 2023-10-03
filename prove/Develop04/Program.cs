@@ -13,7 +13,8 @@ public static class Program
             Console.WriteLine("1) Breathing");
             Console.WriteLine("2) Reflection");
             Console.WriteLine("3) Listing");
-            Console.WriteLine("4) Exit");
+            Console.WriteLine("4) Stretching");
+            Console.WriteLine("5) Exit");
 
             int choice;
             if (!int.TryParse(Console.ReadLine(), out choice))
@@ -36,6 +37,9 @@ public static class Program
                     activity = new ListingActivity();
                     break;
                 case 4:
+                    activity = new StretchingActivity();
+                    break;
+                case 5:
                     continueRunning = false;
                     Console.WriteLine("Thank you for using the Meditaion Simulation :) Have a peaceful day!");
                     break;

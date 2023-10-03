@@ -30,16 +30,20 @@ public class ListingActivity : Activity
 
         string selectedPrompt = prompts[random.Next(prompts.Count)];
         Console.WriteLine(selectedPrompt);
-        DisplayCountdown(5);
+        DisplayCountdown(3);
 
         Console.WriteLine("Start listing items. Press Enter after each item:");
         while (DateTime.Now < endTime)
         {
-            string userInput = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(userInput))
+            if (Console.KeyAvailable)
             {
-                userEntries.Add(userInput);
+                string userInput = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(userInput))
+                {
+                    userEntries.Add(userInput);
+                }
             }
+            Thread.Sleep(100);
         }
 
         Console.WriteLine($"You listed {userEntries.Count} items.");
