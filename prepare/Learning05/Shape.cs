@@ -19,6 +19,6 @@ public class Shape
 
     public virtual double GetArea()
     {
-        return 0; // Base implementation; should be overridden by derived classes
+        return 0;
     }
 }
