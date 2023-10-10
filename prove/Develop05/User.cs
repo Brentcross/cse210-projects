@@ -40,4 +40,9 @@ public class User
     {
         return Score;
     }
+    public void ClearGoalsAndScores()
+    {
+            Goals.Clear();
+            Score = 0;
+    }
 }

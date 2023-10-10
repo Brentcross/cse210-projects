@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace YourNamespaceName
 {
@@ -15,7 +16,8 @@ public class Program
             Console.WriteLine("2. Record a goal accomplishment");
             Console.WriteLine("3. Display all goals");
             Console.WriteLine("4. Display score");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. Clear all goals and scores");
+            Console.WriteLine("6. Exit");
 
             string choice = Console.ReadLine();
             switch (choice)
@@ -33,6 +35,10 @@ public class Program
                     Console.WriteLine($"Your Score: {user.GetScore()}");
                     break;
                 case "5":
+                    user.ClearGoalsAndScores();
+                    Console.WriteLine("All goals and scores have been cleared");
+                    break;
+                case "6":
                     return;
                 default:
                     Console.WriteLine("Invalid choice. Please try again.");
