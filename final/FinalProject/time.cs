@@ -2,11 +2,11 @@
 
 public static class MixingTime
 {
-    public static int Muffin => 15;  // minutes
-    public static int Cheesecake => 30;  // minutes
-    public static int DanishCream => 8;  // minutes
-    public static int PumpkinPie => 12;  // minutes
-    public static int Cake => 7;  // minutes
+    public static int Muffin => 10; 
+    public static int Cake => 7;
+    public static int Cream => 5; 
+    public static int Pumpkin => 15; 
+    public static int Cheesecake => 25; 
 
     public static int GetMixingTimeForBakedGood(string bakedGoodName)
     {
@@ -14,17 +14,16 @@ public static class MixingTime
         {
             case "muffin":
                 return Muffin;
-            case "cheesecake":
-                return Cheesecake;
-            case "danishcream":
-                return DanishCream;
-            case "pumpkinpie":
-                return PumpkinPie;
             case "cake":
                 return Cake;
+            case "cream":
+                return Cream;
+            case "pumpkin":
+                return Pumpkin;
+            case "cheesecake":
+                return Cheesecake;
             default:
                 throw new System.ArgumentException($"Unknown baked good: {bakedGoodName}");
         }
     }
 }
-

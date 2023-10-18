@@ -1,218 +1,128 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-class Program
+namespace BakingApplication
 {
-    private static Dictionary<Ingredient, int> totalIngredients = new Dictionary<Ingredient, int>();
-    private static Dictionary<Type, int> batchesMade = new Dictionary<Type, int>();
-
-    static void Main()
+    class Program
     {
-        Console.WriteLine("Welcome to the bakery!");
+        private static Dictionary<Ingredient, int> ingredientsInBasket = new Dictionary<Ingredient, int>();
+        private static int totalMixingTime = 0;
 
-        while (true)
+        static void Main(string[] args)
         {
-            Console.WriteLine("\nPlease select an option:");
-            Console.WriteLine("1. Make Muffins");
-            Console.WriteLine("2. Make Cheesecake");
-            Console.WriteLine("3. Make Danish Cream");
-            Console.WriteLine("4. Make Pumpkin Pie");
-            Console.WriteLine("5. Make Cake");
-            Console.WriteLine("6. Get Total Ingredients");
-            Console.WriteLine("7. Get Total Mixing Time");
-            Console.WriteLine("8. Exit");
-
-            var choice = Console.ReadLine();
-            switch (choice)
+            while (true)
             {
-                case "1":
-                    HandleMuffinSelection();
-                    break;
-                case "2":
-                    HandleCheesecakeSelection();
-                    break;
-                case "3":
-                    HandleCreamSelection();
-                    break;
-                case "4":
-                    HandlePumpkinPieSelection();
-                    break;
-                case "5":
-                    HandleCakeSelection();
-                    break;
-                case "6":
-                    DisplayTotalIngredients();
-                    break;
-                case "7":
+                Console.Clear();
+                DisplayMenu();
+                int choice = int.Parse(Console.ReadLine());
+
+                Type[] bakedGoodsTypes = GetBakedGoodsTypes();
+                if (choice >= 1 && choice <= bakedGoodsTypes.Length)
+                {
+                    HandleBakedGoodSelection(bakedGoodsTypes[choice - 1]);
+                }
+                else if (choice == bakedGoodsTypes.Length + 1)
+                {
                     DisplayTotalMixingTime();
+                }
+                else if (choice == bakedGoodsTypes.Length + 2)
+                {
+                    DisplayIngredients();
+                }
+                else if (choice == bakedGoodsTypes.Length + 3)
+                {
                     break;
-                case "8":
-                    return;
-                default:
-                    Console.WriteLine("Invalid choice. Try again.");
-                    break;
+                }
             }
         }
-    }
 
-    static void HandleMuffinSelection()
-    {
-        var muffin = new Muffin(MuffinType.Blueberry);
-        AddIngredients(muffin.GetIngredients(), typeof(Muffin), 1);
-    }
-
-    static void HandleCheesecakeSelection()
-    {
-
-        var cheesecake = new Cheesecake();
-        AddIngredients(cheesecake.GetIngredients(), typeof(Cheesecake), 1);
-    }
-    static void HandleCreamSelection()
-{
-
-    var cream = new Cream();
-    AddIngredients(cream.GetIngredients(), typeof(Cream), 1);
-}
-
-static void HandlePumpkinPieSelection()
-{
-
-    var pumpkinPie = new PumpkinPie();
-    AddIngredients(pumpkinPie.GetIngredients(), typeof(PumpkinPie), 1);
-}
-
-static void HandleCakeSelection()
-{
- 
-    var cake = new Cake();
-    AddIngredients(cake.GetIngredients(), typeof(Cake), 1);
-}
-
-
-public class Cream
-{
-    public Dictionary<Ingredient, int> GetIngredients()
-    {
-
-        return new Dictionary<Ingredient, int>();
-    }
-
-    public int GetMixingTime()
-    {
-        return 12; 
-    }
-}
-
-
-public class PumpkinPie
-{
-    public Dictionary<Ingredient, int> GetIngredients()
-    {
-
-        return new Dictionary<Ingredient, int>();
-    }
-
-    public int GetMixingTime()
-    {
-        return 20; 
-    }
-}
-public class Cake
-{
-    public Dictionary<Ingredient, int> GetIngredients()
-    {
-
-        return new Dictionary<Ingredient, int>();
-    }
-
-    public int GetMixingTime()
-    {
-        return 25; 
-    }
-}
-
-    static void AddIngredients(Dictionary<Ingredient, int> ingredients, Type recipeType, int batchCount)
-    {
-        foreach (var ingredient in ingredients)
+        private static void DisplayMenu()
         {
-            if (totalIngredients.ContainsKey(ingredient.Key))
-                totalIngredients[ingredient.Key] += ingredient.Value;
-            else
-                totalIngredients[ingredient.Key] = ingredient.Value;
+            Console.WriteLine("Select a baked good to add to your basket:");
+            Type[] bakedGoodsTypes = GetBakedGoodsTypes();
+            for (int i = 0; i < bakedGoodsTypes.Length; i++)
+            {
+                var nameAttribute = (BakedGoodNameAttribute)bakedGoodsTypes[i].GetCustomAttributes(typeof(BakedGoodNameAttribute), false).FirstOrDefault();
+                Console.WriteLine($"{i + 1}. {nameAttribute?.Name ?? bakedGoodsTypes[i].Name}");
+            }
+
+            Console.WriteLine($"{bakedGoodsTypes.Length + 1}. Display total mixing time");
+            Console.WriteLine($"{bakedGoodsTypes.Length + 2}. Display ingredients");
+            Console.WriteLine($"{bakedGoodsTypes.Length + 3}. Exit");
         }
 
-        if (batchesMade.ContainsKey(recipeType))
-            batchesMade[recipeType] += batchCount;
-        else
-            batchesMade[recipeType] = batchCount;
-    }
+        private static Type[] GetBakedGoodsTypes()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(s => s.GetTypes())
+                .Where(p => typeof(BakedGood).IsAssignableFrom(p) && !p.IsAbstract)
+                .ToArray();
+        }
+        private static void HandleBakedGoodSelection(Type bakedGoodType)
+        {
+            BakedGood bakedGood;
 
-    static void DisplayTotalIngredients()
+    if (bakedGoodType == typeof(Muffin))
     {
-        Console.WriteLine("\nTotal Ingredients Needed:");
-        foreach (var ingredient in totalIngredients)
-            Console.WriteLine($"{ingredient.Key}: {ingredient.Value}");
-    }
+        Console.WriteLine("Choose the muffin type:");
+        Console.WriteLine("1. Blueberry");
+        Console.WriteLine("2. Poppy");
+        Console.WriteLine("3. Vanilla");
+        Console.WriteLine("4. Chocolate");
 
-    static void DisplayTotalMixingTime()
+        int choice;
+        if(!int.TryParse(Console.ReadLine(), out choice) || choice < 1 || choice > 4)
+        {
+            Console.WriteLine("Invalid selection. Returning to the main menu.");
+            return;
+        }
+
+        var muffinType = (MuffinType)choice;
+        bakedGood = new Muffin(muffinType);
+    }
+    else
     {
-        int totalMixingTime = 0;
-        if (batchesMade.ContainsKey(typeof(Muffin)))
-            totalMixingTime += new Muffin(MuffinType.None).GetMixingTime() * batchesMade[typeof(Muffin)];
-
-
-
-        Console.WriteLine($"Total Mixing Time Needed: {totalMixingTime} minutes");
+        bakedGood = (BakedGood)Activator.CreateInstance(bakedGoodType);
     }
+            totalMixingTime += bakedGood.GetMixingTime(); 
+            AddIngredients(bakedGood.GetIngredients());
+    
 
-public class Muffin
-{
-    private MuffinType Type { get; set; }
 
-    public Muffin(MuffinType type)
-    {
-        Type = type;
-    }
-
-    public Dictionary<Ingredient, int> GetIngredients()
-    {
-        return new Dictionary<Ingredient, int>();
-    }
-
-    public int GetMixingTime()
-    {
-        return 10;
-    }
 }
+        private static void AddIngredients(Dictionary<Ingredient, int> ingredientsToAdd)
+        {
+            foreach (var ingredient in ingredientsToAdd)
+            {
+                if (ingredientsInBasket.ContainsKey(ingredient.Key))
+                {
+                    ingredientsInBasket[ingredient.Key] += ingredient.Value;
+                }
+                else
+                {
+                    ingredientsInBasket[ingredient.Key] = ingredient.Value;
+                }
+            }
+        }
+        
 
-public class Cheesecake
-{
-    public Dictionary<Ingredient, int> GetIngredients()
-    {
+        private static void DisplayTotalMixingTime()
+        {
+            Console.WriteLine($"Total mixing time: {totalMixingTime} minutes of mixing time alone");
+            Console.ReadLine();
 
-        return new Dictionary<Ingredient, int>();
+        }
+
+        private static void DisplayIngredients()
+        {
+            Console.WriteLine("Ingredients required for the day:");
+            foreach (var ingredient in ingredientsInBasket)
+            {
+                Console.WriteLine($"{ingredient.Key.ToReadableString()}: {ingredient.Value}");
+            }
+            Console.ReadLine();
+        }
     }
-    public int GetMixingTime()
-    {
-        return 15;
-    }
-}
-
-
-public enum MuffinType
-{
-    None,
-    Blueberry,
-    Poppy,
-    Vanilla,
-    Chocolate
-}
-
-public enum Ingredient
-{
-    Flour,
-    Sugar,
-    Egg,
-    Water
-}
+    
 }

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 
-public class Cake
+[BakedGoodName("Cake")]
+public class Cake : BakedGood
 {
-    public Dictionary<Ingredient, int> GetIngredients()
+    public override Dictionary<Ingredient, int> GetIngredients()
     {
         return new Dictionary<Ingredient, int>
         {
@@ -11,7 +12,8 @@ public class Cake
             { Ingredient.CakeBase, 2 }
         };
     }
-  public int GetMixingTime()
+
+    public override int GetMixingTime()
     {
         return 7;
     }

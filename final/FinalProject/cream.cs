@@ -1,10 +1,9 @@
-// cream.cs
-
 using System.Collections.Generic;
 
-public class Cream
+[BakedGoodName("Cream")]
+public class Cream : BakedGood
 {
-    public Dictionary<Ingredient, int> GetIngredients()
+    public override Dictionary<Ingredient, int> GetIngredients()
     {
         return new Dictionary<Ingredient, int>
         {
@@ -15,9 +14,9 @@ public class Cream
             { Ingredient.Egg, 2 }
         };
     }
-  public int GetMixingTime()
+
+    public override int GetMixingTime()
     {
         return 5;
     }
-
 }
