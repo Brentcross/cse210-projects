@@ -39,7 +39,7 @@ namespace BakingApplication
 
         private static void DisplayMenu()
         {
-            Console.WriteLine("Select a baked good to add to your basket:");
+            Console.WriteLine("Select a receipe to add to todays production:");
             Type[] bakedGoodsTypes = GetBakedGoodsTypes();
             for (int i = 0; i < bakedGoodsTypes.Length; i++)
             {
